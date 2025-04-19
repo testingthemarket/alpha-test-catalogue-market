@@ -1,0 +1,408 @@
+<!DOCTYPE html><html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог товаров</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .product-card img {
+            max-width: 100%;
+            height: 30vh;
+            object-fit: contain;
+        }
+        .product-card h2 {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .product-card p {
+            font-size: 1em;
+            color: #666;
+            margin: 5px 0;
+        }
+        .product-card .price {
+            font-size: 1.5em;
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .product-card .description {
+            font-size: 0.9em;
+            color: #333;
+            margin: 10px 0;
+        }
+        .product-card .button {
+            display: inline-block;
+            margin: 15px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+        .product-card .button:hover {
+            background-color: #2980b9;
+        }
+        .city-title {
+            font-size: 2em;
+            margin: 30px 0;
+            text-align: center;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .category-title {
+            font-size: 1.5em;
+            margin: 20px 0;
+            text-align: center;
+            color: #34495e;
+        }
+        .city-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 20px;
+        }
+        .city-buttons button {
+            flex-grow: 1; /* Добавляем, чтобы кнопки занимали все доступное пространство */
+            width: auto; /* Автоматическая ширина */
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            background-color: #2c3e50;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .city-buttons button:hover {
+            background-color: #34495e;
+        }
+        .sorting-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .sorting-buttons button {
+            margin: 0 10px;
+            padding: 8px 16px;
+            font-size: 0.9em;
+            border: none;
+            background-color: #777;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .sorting-buttons button:hover {
+            background-color: #555;
+        }
+        .city-section {
+            margin-bottom: 50px;
+        }
+        .csv-upload {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+        .csv-upload input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .csv-upload button {
+            padding: 8px 16px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .csv-upload button:hover {
+            background-color: #27ae60;
+        }
+
+        #backToTopBtn {
+            display: none; /* Сначала скрываем кнопку */
+            position: fixed; /* Фиксированное позиционирование */
+            bottom: 20px; /* Отступ от нижнего края */
+            right: 20px; /* Отступ от правого края */
+            z-index: 99; /* Поверх других элементов */
+            border: none; /* Убираем рамку */
+            outline: none; /* Убираем обводку при фокусе */
+            background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный цвет */
+            color: white; /* Белый цвет текста */
+            cursor: pointer; /* Курсор в виде руки */
+            padding: 10px; /* Отступы внутри кнопки */
+            border-radius: 50%; /* Круглая форма */
+            font-size: 1.5em; /* Размер шрифта */
+            transition: all 0.3s ease; /* Плавная анимация */
+        }
+
+        #backToTopBtn:hover {
+            background-color: rgba(0, 0, 0, 0.8); /* Затемнение при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="city-buttons">
+        <button onclick="location.href='#spb'">Санкт-Петербург</button>
+        <button onclick="location.href='#msk'">Москва</button>
+    </div>
+
+    
+
+    <div class="sorting-buttons">
+        <button onclick="sortByPrice('asc')">По цене (возрастание)</button>
+        <button onclick="sortByPrice('desc')">По цене (убывание)</button>
+    </div>
+
+    <div class="city-section" id="spb">
+        <h1 class="city-title">Санкт-Петербург</h1>
+        
+        <h2 class="category-title">OZON</h2>
+        <div class="catalog" id="ozon-spb"><div class="product-card"><img src="https://static.tildacdn.com/stor3664-3237-4131-a464-326233326631/31702724.png" alt="Ozon, Гражданский пр."><h2>Ozon, Гражданский пр.</h2><p class="price">₽3 000 000</p><p>Чистая прибыль: 170 000 руб.</p><p>Итого расходов: 120 000 руб.</p><a href="https://pvzmarket.ru/tproduct/974773622922-ozon-grazhdanskii-pr" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3133-3135-4462-b735-633837636134/19133903.png" alt="Ozon, Горьковская"><h2>Ozon, Горьковская</h2><p class="price">₽4 300 000</p><p>Чистая прибыль: 200 000 руб.</p><p>Итого расходов: 160 000 руб.</p><a href="https://pvzmarket.ru/tproduct/277727119542-ozon-gorkovskaya" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3936-3339-4666-b939-626336373262/36484677.png" alt="Ozon, Электросила"><h2>Ozon, Электросила</h2><p class="price">₽2 800 000</p><p>Чистая прибыль: 100 000 руб.</p><p>Итого расходов: 85 000 руб.</p><a href="https://pvzmarket.ru/tproduct/101555821312-ozon-elektrosila" target="_blank" class="button">Перейти к товару</a></div></div>
+
+        <h2 class="category-title">Wildberries</h2>
+        <div class="catalog" id="wb-spb"><div class="product-card"><img src="https://static.tildacdn.com/stor6132-6435-4938-b139-626236663138/33628477.png" alt="WB, Академическая"><h2>WB, Академическая</h2><p class="price">₽2 500 000</p><p>Чистая прибыль: 120 000 руб.</p><p>Итого расходов: 190 000 руб.</p><a href="https://pvzmarket.ru/tproduct/660331415112-wb-akademicheskaya" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3366-3036-4837-b031-386636386630/97578038.png" alt="WB, Сертолово"><h2>WB, Сертолово</h2><p class="price">₽4 500 000</p><p>Чистая прибыль: 250 000 руб.</p><p>Итого расходов: 220 000 руб.</p><a href="https://pvzmarket.ru/tproduct/738499476172-wb-sertolovo" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3032-6262-4234-a638-623333366234/42990555.png" alt="WB, Комендантский пр."><h2>WB, Комендантский пр.</h2><p class="price">₽5 200 000</p><p>Чистая прибыль: 255 000 руб.</p><p>Итого расходов: 250 000 руб.</p><a href="https://pvzmarket.ru/tproduct/467013906532-wb-komendantskii-pr" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor6365-3234-4163-a364-626636356139/62892451.png" alt="WB, Мурино"><h2>WB, Мурино</h2><p class="price">₽2 500 000</p><p>Чистая прибыль: 130 000 руб.</p><p>Итого расходов: 200 000 руб.</p><a href="https://pvzmarket.ru/tproduct/942147000362-wb-murino" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3734-3064-4431-b661-326364346461/82672697.png" alt="WB, Калининский район"><h2>WB, Калининский район</h2><p class="price">₽5 000 000</p><p>Чистая прибыль: 440 000 руб.</p><p>Итого расходов: 330 000 руб.</p><a href="https://pvzmarket.ru/tproduct/608329010932-wb-kalininskii-raion" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3338-6564-4161-a566-613664333637/32955576.png" alt="WB, Гражданский пр."><h2>WB, Гражданский пр.</h2><p class="price">₽1 500 000</p><p>Чистая прибыль: 70 000 руб.</p><p>Итого расходов: 213 000 руб.</p><a href="https://pvzmarket.ru/tproduct/662899046522-wb-grazhdanskii-pr" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3164-3961-4333-b761-623731636139/25597632.png" alt="WB, Сосновая Поляна"><h2>WB, Сосновая Поляна</h2><p class="price">₽1 400 000</p><p>Чистая прибыль: 73 000 руб.</p><p>Итого расходов: 185 000 руб.</p><a href="https://pvzmarket.ru/tproduct/668486444452-wb-sosnovaya-polyana" target="_blank" class="button">Перейти к товару</a></div></div>
+
+        <h2 class="category-title">Яндекс.Маркет</h2>
+        <div class="catalog" id="yandex-spb"><div class="product-card"><img src="https://static.tildacdn.com/stor3935-3665-4238-a565-303832623437/15059922.png" alt="🎸Муз-Маркет, Шушары"><h2>🎸Муз-Маркет, Шушары</h2><p class="price">₽1 500 000</p><p>Чистая прибыль: 45 000 руб.</p><p>Итого расходов: 130 000 руб.</p><a href="https://pvzmarket.ru/tproduct/631542654602-muz-market-shushari" target="_blank" class="button">Перейти к товару</a></div></div>
+    </div>
+
+    <div class="city-section" id="msk">
+        <h1 class="city-title">Москва</h1>
+        
+        <h2 class="category-title">OZON</h2>
+        <div class="catalog" id="ozon-msk"><div class="product-card"><img src="https://static.tildacdn.com/stor6334-3432-4163-a537-656436663864/88935089.png" alt="Ozon-МСК, Некрасовка"><h2>Ozon-МСК, Некрасовка</h2><p class="price">₽1 500 000</p><p>Чистая прибыль: 60 000 руб.</p><p>Итого расходов: 145 000 руб.</p><a href="https://pvzmarket.ru/tproduct/755552703482-ozon-msk-nekrasovka" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor6432-3062-4966-b337-326337326635/90477350.png" alt="Ozon+Яндекс, Щёлково"><h2>Ozon+Яндекс, Щёлково</h2><p class="price">₽2 500 000</p><p>Чистая прибыль: 175 000 руб.</p><p>Итого расходов: 134 000 руб.</p><a href="https://pvzmarket.ru/tproduct/653687545862-ozonyandeks-schyolkovo" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3733-3038-4130-a131-396530313661/69398293.png" alt="Ozon-МСК, ЖК Город Счастья"><h2>Ozon-МСК, ЖК Город Счастья</h2><p class="price">₽600 000</p><p>Чистая прибыль: 25 000 руб.</p><p>Итого расходов: 107 000 руб.</p><a href="https://pvzmarket.ru/tproduct/544357505372-ozon-msk-zhk-gorod-schastya" target="_blank" class="button">Перейти к товару</a></div></div>
+
+        <h2 class="category-title">Wildberries</h2>
+        <div class="catalog" id="wb-msk"><div class="product-card"><img src="https://static.tildacdn.com/stor3939-6637-4634-b161-343435643561/84630313.png" alt="WB-МСК, Планерная"><h2>WB-МСК, Планерная</h2><p class="price">₽4 750 000</p><p>Чистая прибыль: 313 000 руб.</p><p>Итого расходов: 280 000 руб.</p><a href="https://pvzmarket.ru/tproduct/256192675172-wb-msk-planernaya" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3766-3633-4663-b737-633534376330/11730096.png" alt="WB-МСК, Раменки"><h2>WB-МСК, Раменки</h2><p class="price">₽6 000 000</p><p>Чистая прибыль: 455 000 руб.</p><p>Итого расходов: 145 000 руб.</p><a href="https://pvzmarket.ru/tproduct/116015852602-wb-msk-ramenki" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor6431-3566-4930-b138-396130313065/54969645.png" alt="WB-МСК, Авиамоторная"><h2>WB-МСК, Авиамоторная</h2><p class="price">₽3 800 000</p><p>Чистая прибыль: 163 000 руб.</p><p>Итого расходов: 370 000 руб.</p><a href="https://pvzmarket.ru/tproduct/500479548122-wb-msk-aviamotornaya" target="_blank" class="button">Перейти к товару</a></div></div>
+
+        <h2 class="category-title">Яндекс.Маркет</h2>
+        <div class="catalog" id="yandex-msk"><div class="product-card"><img src="https://static.tildacdn.com/stor3461-3864-4534-b337-333365373932/42095875.png" alt="Яндекс-МСК, Зеленоград"><h2>Яндекс-МСК, Зеленоград</h2><p class="price">₽1 200 000</p><p>Чистая прибыль: 60 000 руб.</p><p>Итого расходов: 150 000 руб.</p><a href="https://pvzmarket.ru/tproduct/105250185182-yandeks-msk-zelenograd" target="_blank" class="button">Перейти к товару</a></div><div class="product-card"><img src="https://static.tildacdn.com/stor3437-3964-4330-b866-346334313435/14692364.png" alt="Яндекс, D2 Подольск"><h2>Яндекс, D2 Подольск</h2><p class="price">₽2 700 000</p><p>Чистая прибыль: 120 000 руб.</p><p>Итого расходов: 146 000 руб.</p><a href="https://pvzmarket.ru/tproduct/501721159092-yandeks-d2-podolsk" target="_blank" class="button">Перейти к товару</a></div></div>
+    </div>
+
+    <button onclick="scrollToTop()" id="backToTopBtn" title="Наверх">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"></path><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path></svg>
+    </button>
+
+    <script>
+        window.onscroll = function() {scrollFunction()};
+
+        function scrollFunction() {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                document.getElementById("backToTopBtn").style.display = "block";
+            } else {
+                document.getElementById("backToTopBtn").style.display = "none";
+            }
+        }
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        }
+
+        let products = [];
+
+        function formatNumber(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+        }
+
+        function sortByPrice(order) {
+            const catalogs = [
+                'ozon-spb', 'wb-spb', 'yandex-spb',
+                'ozon-msk', 'wb-msk', 'yandex-msk'
+            ];
+            catalogs.forEach(catalogId => {
+                const catalog = document.getElementById(catalogId);
+                if (catalog) {
+                    const cards = Array.from(catalog.querySelectorAll('.product-card'));
+                    cards.sort((a, b) => {
+                        const priceA = parseInt(a.querySelector('.price').textContent.replace(/[₽ ]/g, ''), 10);
+                        const priceB = parseInt(b.querySelector('.price').textContent.replace(/[₽ ]/g, ''), 10);
+                        if (order === 'asc') {
+                            return priceA - priceB;
+                        } else {
+                            return priceB - priceA;
+                        }
+                    });
+                    catalog.innerHTML = '';
+                    cards.forEach(card => catalog.appendChild(card));
+                }
+            });
+        }
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            
+            const img = document.createElement('img');
+            img.src = product.image;
+            img.alt = product.title;
+            card.appendChild(img);
+
+            const title = document.createElement('h2');
+            title.textContent = product.title;
+            card.appendChild(title);
+
+            const price = document.createElement('p');
+            price.className = 'price';
+            price.textContent = '₽' + formatNumber(product.price);
+            card.appendChild(price);
+
+            const netProfitP = document.createElement('p');
+            netProfitP.textContent = 'Чистая прибыль: ' + product.netProfit;
+            card.appendChild(netProfitP);
+
+            const totalExpensesP = document.createElement('p');
+            totalExpensesP.textContent = 'Итого расходов: ' + product.totalExpenses;
+            card.appendChild(totalExpensesP);
+
+            const link = document.createElement('a');
+            link.href = product.link;
+            link.target = '_blank';
+            link.className = 'button';
+            link.textContent = 'Перейти к товару';
+            card.appendChild(link);
+
+            return card;
+        }
+
+        function renderCatalog(products) {
+            const catalogs = {
+                'ozon-spb': document.getElementById('ozon-spb'),
+                'wb-spb': document.getElementById('wb-spb'),
+                'yandex-spb': document.getElementById('yandex-spb'),
+                'ozon-msk': document.getElementById('ozon-msk'),
+                'wb-msk': document.getElementById('wb-msk'),
+                'yandex-msk': document.getElementById('yandex-msk')
+            };
+
+            // Очистка всех каталогов
+            Object.values(catalogs).forEach(catalog => {
+                catalog.innerHTML = '';
+            });
+
+            products.forEach(product => {
+                const card = createProductCard(product);
+                const category = product.category.toLowerCase();
+                
+                if (category.includes('ozon-спб')) catalogs['ozon-spb'].appendChild(card);
+                else if (category.includes('wb-спб')) catalogs['wb-spb'].appendChild(card);
+                else if (category.includes('я.маркет-спб')) catalogs['yandex-spb'].appendChild(card);
+                else if (category.includes('ozon-мск')) catalogs['ozon-msk'].appendChild(card);
+                else if (category.includes('wb-мск')) catalogs['wb-msk'].appendChild(card);
+                else if (category.includes('я.маркет-мск')) catalogs['yandex-msk'].appendChild(card);
+            });
+        }
+
+        function parseCSV(csvData) {
+            const lines = csvData.split(/\r\n|\n/);
+            const headers = lines[0].split(';');
+            const products = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const currentLine = lines[i].split(';');
+
+                if (currentLine.length === headers.length) {
+                    const product = {};
+                    for (let j = 0; j < headers.length; j++) {
+                        const header = headers[j].trim().replace(/"/g, '');
+                        const value = currentLine[j] ? currentLine[j].trim().replace(/"/g, '') : '';
+                        product[header] = value;
+                    }
+
+                    if (product["Tilda UID"] && product["Category"] && product["Title"] && product["Price"] && product["Photo"] && product["Url"]) {
+                        const netProfit = product.Description.match(/\d[\d\s.,]*\d|\d+/g) ? 
+                            formatNumber(parseFloat((product.Description.match(/\d[\d\s.,]*\d|\d+/g)[0]).replace(/\s+/g, '').replace(',', '.'))) + ' руб.' : 
+                            'Не указано';
+                        const totalExpenses = product.Description.match(/\d[\d\s.,]*\d|\d+/g) ? 
+                            formatNumber(parseFloat((product.Description.match(/\d[\d\s.,]*\d|\d+/g)[1]).replace(/\s+/g, '').replace(',', '.'))) + ' руб.' : 
+                            'Не указано';
+                        const rawPrice = parseFloat(product["Price"].replace(/[^\d.,]/g, '').replace(',', '.'));
+
+                        products.push({
+                            title: product["Title"],
+                            price: formatNumber(rawPrice),
+                            description: product.Description,
+                            image: product["Photo"].split(" ")[0],
+                            link: product["Url"],
+                            category: product["Category"],
+                            netProfit: netProfit,
+                            totalExpenses: totalExpenses
+                        });
+                    }
+                }
+            }
+            return products;
+        }
+
+        function generateNewHtml(products) {
+            const doc = document.implementation.createHTMLDocument();
+            doc.documentElement.innerHTML = document.documentElement.innerHTML;
+            
+            // Remove the file input and upload button
+            const csvUpload = doc.querySelector('.csv-upload');
+            if (csvUpload) csvUpload.remove();
+
+            // Pre-render the products
+            renderCatalog(products);
+
+            return '<!DOCTYPE html>' + doc.documentElement.outerHTML;
+        }
+
+        function download(filename, text) {
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/html;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function handleFileUpload() {
+            const fileInput = document.getElementById('csvFile');
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const csvData = e.target.result;
+                    products = parseCSV(csvData);
+                    renderCatalog(products);
+                    const html = generateNewHtml(products);
+                    download('index.html', html);
+                };
+                reader.readAsText(file);
+            } else {
+                alert('Пожалуйста, выберите CSV файл.');
+            }
+        }
+    </script>
+
+
+</body></html>
